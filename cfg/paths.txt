@@ -1,0 +1,4 @@
+./files/zapret = /opt/zapret/init.d/sysv/zapret
+./files/000-zapret.sh = /opt/etc/ndm/netfilter.d/000-zapret.sh
+./files/S00fix = /opt/etc/init.d/S00fix
+./files/zapret-hosts-user.txt = /opt/zapret/ipset/zapret-hosts-user.txt
