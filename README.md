@@ -2,7 +2,7 @@
 
 ## Использование
 
-ВЫПОЛНЯТЬ СТРОГО ПОСЛЕ УСТАНОВКИ ZAPRET ([пример установки](https://habr.com/ru/articles/834826/))
+ВЫПОЛНЯТЬ СТРОГО ПОСЛЕ УСТАНОВКИ ZAPRET
 
 ```bash
 git clone https://github.com/BlackkkMaster/keenetic-zapret-cp ~/keenetic-zapret-cp
