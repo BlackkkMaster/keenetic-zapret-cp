@@ -65,3 +65,9 @@ echo "Символическая ссылка создана: /opt/etc/init.d/S9
 cp -a /opt/zapret/init.d/custom.d.examples.linux/10-keenetic-udp-fix /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
 
 echo "Файл 10-keenetic-udp-fix скопирован"
+
+chmod +x /opt/etc/ndm/netfilter.d/000-zapret.sh
+echo "Права выданы /opt/etc/ndm/netfilter.d/000-zapret.sh"
+
+chmod +x /opt/etc/init.d/S00fix
+echo "Права выданы /opt/etc/init.d/S00fix"
