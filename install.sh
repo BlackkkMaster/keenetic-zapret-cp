@@ -64,29 +64,28 @@ while IFS='=' read -r source_path dest_path; do
 done < "$MAPPING_FILE"
 
 echo "Копирование файлов завершено."
-
 echo ""
 
 ln -fs /opt/zapret/init.d/sysv/zapret /opt/etc/init.d/S90-zapret
 
 echo "Добавлено в автозагрузку: /opt/etc/init.d/S90-zapret -> /opt/zapret/init.d/sysv/zapret"
-
 echo ""
 
 cp -a /opt/zapret/init.d/custom.d.examples.linux/10-keenetic-udp-fix /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
 
 echo "Файл 10-keenetic-udp-fix скопирован"
-
 echo ""
 
 chmod +x /opt/etc/ndm/netfilter.d/000-zapret.sh
 echo "Права выданы /opt/etc/ndm/netfilter.d/000-zapret.sh"
-
 echo ""
 
 chmod +x /opt/etc/init.d/S00fix
 echo "Права выданы /opt/etc/init.d/S00fix"
+echo ""
 
+chmod +x /opt/zapret/init.d/sysv/zapret
+echo "Права выданы /opt/zapret/init.d/sysv/zapret"
 echo ""
 
 
