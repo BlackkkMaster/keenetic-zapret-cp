@@ -120,10 +120,8 @@ echo "Резервная копия успешно создана."
 
 # --- Основная логика замены с использованием AWK ---
 
-echo "Обновление блока NFQWS_OPT в '$CONFIG_FILE'..."
-# Используем AWK для надежной замены многострочного блока.
-# Скрипт AWK найдет блок 'NFQWS_OPT="..."', выведет новое содержимое
-# из NEW_OPT_FILE и затем пропустит старое содержимое.
+echo "Обновление блока NFQWS_OPT и параметра WS_USER в '$CONFIG_FILE'..."
+# Используем AWK для надежной замены многострочного блока и параметра WS_USER.
 awk -v new_file_path="$NEW_OPT_FILE" '
 BEGIN {
     # Флаг, указывающий, находимся ли мы внутри блока NFQWS_OPT
@@ -154,6 +152,12 @@ in_nfqws_opt_block && /^"$/ {
     next;                   # Переходим к следующей строке, пропуская оригинальную закрывающую кавычку
 }
 
+# Для строки #WS_USER=nobody, заменяем её на WS_USER=nobody
+/^#WS_USER=nobody$/ {
+    print "WS_USER=nobody";
+    next;
+}
+
 # Для всех остальных строк: если мы не находимся внутри блока NFQWS_OPT, печатаем строку
 !in_nfqws_opt_block {
     print $0;
@@ -164,10 +168,10 @@ in_nfqws_opt_block && /^"$/ {
 if [ $? -eq 0 ]; then
     # Если AWK выполнился успешно, заменяем оригинальный файл временным
     mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo "Параметры NFQWS_OPT успешно обновлены в '$CONFIG_FILE'."
+    echo "Параметры NFQWS_OPT и WS_USER успешно обновлены в '$CONFIG_FILE'."
     echo "Скрипт выполнен успешно!"
 else
-    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT в '$CONFIG_FILE'."
+    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT и WS_USER в '$CONFIG_FILE'."
     rm -f "${CONFIG_FILE}.tmp" # Удаляем временный файл в случае ошибки
     exit 1
 fi
