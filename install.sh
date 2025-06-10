@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Путь к файлу конфигурации zapret
+CONFIG_FILE="/opt/zapret/config"
+# Путь к файлу, содержащему новые параметры NFQWS_OPT
+NEW_OPT_FILE="./nfqws_opt.txt"
+# Путь для резервной копии оригинального файла конфигурации
+BACKUP_FILE="${CONFIG_FILE}.bak"
+
 # Проверяем, что передан один аргумент (путь к файлу со списком копирования)
 if [ -z "$1" ]; then
     echo "Использование: $0 <файл_со_списком_копирования>"
@@ -58,16 +65,111 @@ done < "$MAPPING_FILE"
 
 echo "Копирование файлов завершено."
 
+echo
+
 ln -fs /opt/zapret/init.d/sysv/zapret /opt/etc/init.d/S90-zapret
 
-echo "Символическая ссылка создана: /opt/etc/init.d/S90-zapret -> /opt/zapret/init.d/sysv/zapret"
+echo "Добавлено в автозагрузку: /opt/etc/init.d/S90-zapret -> /opt/zapret/init.d/sysv/zapret"
+
+echo
 
 cp -a /opt/zapret/init.d/custom.d.examples.linux/10-keenetic-udp-fix /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
 
 echo "Файл 10-keenetic-udp-fix скопирован"
 
+echo
+
 chmod +x /opt/etc/ndm/netfilter.d/000-zapret.sh
 echo "Права выданы /opt/etc/ndm/netfilter.d/000-zapret.sh"
 
+echo
+
 chmod +x /opt/etc/init.d/S00fix
 echo "Права выданы /opt/etc/init.d/S00fix"
+
+echo
+
+
+echo "Начало обновления конфигурации zapret..."
+
+# --- Проверки перед выполнением ---
+
+# Проверяем, существует ли файл конфигурации
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "Ошибка: Файл конфигурации '$CONFIG_FILE' не найден."
+    echo "Убедитесь, что файл существует и указан правильный путь."
+    exit 1
+fi
+
+# Проверяем, существует ли файл с новыми параметрами
+if [ ! -f "$NEW_OPT_FILE" ]; then
+    echo "Ошибка: Файл с новыми параметрами NFQWS_OPT '$NEW_OPT_FILE' не найден."
+    echo "Убедитесь, что 'nfqws_opt.txt' находится в той же директории, что и этот скрипт."
+    exit 1
+fi
+
+# Создаем резервную копию оригинального файла конфигурации
+echo "Создание резервной копии файла '$CONFIG_FILE' -> '$BACKUP_FILE'..."
+cp "$CONFIG_FILE" "$BACKUP_FILE"
+if [ $? -ne 0 ]; then
+    echo "Ошибка: Не удалось создать резервную копию файла '$CONFIG_FILE'."
+    echo "Проверьте права доступа к файлу."
+    exit 1
+fi
+echo "Резервная копия успешно создана."
+
+# --- Основная логика замены с использованием AWK ---
+
+echo "Обновление блока NFQWS_OPT в '$CONFIG_FILE'..."
+# Используем AWK для надежной замены многострочного блока.
+# Скрипт AWK найдет блок 'NFQWS_OPT="..."', выведет новое содержимое
+# из NEW_OPT_FILE и затем пропустит старое содержимое.
+awk -v new_file_path="$NEW_OPT_FILE" '
+BEGIN {
+    # Флаг, указывающий, находимся ли мы внутри блока NFQWS_OPT
+    in_nfqws_opt_block = 0;
+    # Переменная для хранения нового содержимого NFQWS_OPT
+    new_nfqws_opt_content = "";
+
+    # Читаем содержимое нового файла один раз в переменную new_nfqws_opt_content
+    # Построчно добавляем его, разделяя переносами строки
+    while ((getline line < new_file_path) > 0) {
+        new_nfqws_opt_content = new_nfqws_opt_content (new_nfqws_opt_content ? "\n" : "") line;
+    }
+    close(new_file_path); # Закрываем файл сразу после чтения
+}
+
+# Когда встречаем начало блока NFQWS_OPT (строка, начинающаяся с NFQWS_OPT=")
+/^NFQWS_OPT="/ {
+    print "NFQWS_OPT=\""       # Выводим начальную строку с кавычкой
+    print new_nfqws_opt_content # Выводим все содержимое, прочитанное из new_nfqws_opt.txt
+    print "\""                  # Выводим закрывающую кавычку
+    in_nfqws_opt_block = 1;     # Устанавливаем флаг в true, чтобы пропустить оригинальные строки блока
+    next;                       # Переходим к следующей строке, избегая печати оригинальной строки NFQWS_OPT="
+}
+
+# Когда мы находимся внутри блока и встречаем закрывающую кавычку (строка, содержащая только ")
+in_nfqws_opt_block && /^"$/ {
+    in_nfqws_opt_block = 0; # Устанавливаем флаг в false, блок NFQWS_OPT завершен
+    next;                   # Переходим к следующей строке, пропуская оригинальную закрывающую кавычку
+}
+
+# Для всех остальных строк: если мы не находимся внутри блока NFQWS_OPT, печатаем строку
+!in_nfqws_opt_block {
+    print $0;
+}
+' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" # Перенаправляем вывод AWK во временный файл
+
+# Проверяем успешность выполнения AWK
+if [ $? -eq 0 ]; then
+    # Если AWK выполнился успешно, заменяем оригинальный файл временным
+    mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+    echo "Параметры NFQWS_OPT успешно обновлены в '$CONFIG_FILE'."
+    echo "Скрипт выполнен успешно!"
+else
+    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT в '$CONFIG_FILE'."
+    rm -f "${CONFIG_FILE}.tmp" # Удаляем временный файл в случае ошибки
+    exit 1
+fi
+
+exit 0

@@ -2,10 +2,11 @@
 
 ## Использование
 
-```bash
-git clone https://github.com/BlackkkMaster/keenetic-zapret-cp
-cd keenetic-zapret-cp
-chmod +x install.sh
-./install.sh
-```
+ВЫПОЛНЯТЬ СТРОГО ПОСЛЕ УСТАНОВКИ ZAPRET ([пример установки](https://habr.com/ru/articles/834826/))
 
+```bash
+git clone https://github.com/BlackkkMaster/keenetic-zapret-cp ~/keenetic-zapret-cp
+cd ~/keenetic-zapret-cp
+chmod +x install.sh
+./install.sh cfg/paths.txt
+```

@@ -1,0 +1,6 @@
+NFQWS_OPT="
+--filter-tcp=80 --dpi-desync=fake,multisplit --dpi-desync-ttl=0 --dpi-desync-fooling=md5sig,badsum --dpi-desync-fake-http=/opt/zapret/files/fake/dht_get_peers.bin <HOSTLIST> --new
+--filter-tcp=443 --dpi-desync=fake,multidisorder --dpi-desync-split-pos=method+2,midsld,5 --dpi-desync-ttl=0 --dpi-desync-fooling=md5sig,badsum,badseq --dpi-desync-repeats=15 --dpi-desync-any-protocol --dpi-desync-cutoff=d4 --dpi-desync-fake-tls=/opt/zapret/files/fake/dht_get_peers.bin <HOSTLIST> --new
+--filter-udp=443 --dpi-desync=fake --dpi-desync-repeats=15 --dpi-desync-ttl=0  --dpi-desync-any-protocol --dpi-desync-cutoff=d4 --dpi-desync-fooling=md5sig,badsum --dpi-desync-fake-quic=/opt/zapret/files/fake/dht_get_peers.bin <HOSTLIST> --new
+--filter-udp=50000-50099 --filter-l7=discord,stun --dpi-desync=fake <HOSTLIST>
+"
