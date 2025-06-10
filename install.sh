@@ -65,29 +65,29 @@ done < "$MAPPING_FILE"
 
 echo "Копирование файлов завершено."
 
-echo
+echo ""
 
 ln -fs /opt/zapret/init.d/sysv/zapret /opt/etc/init.d/S90-zapret
 
 echo "Добавлено в автозагрузку: /opt/etc/init.d/S90-zapret -> /opt/zapret/init.d/sysv/zapret"
 
-echo
+echo ""
 
 cp -a /opt/zapret/init.d/custom.d.examples.linux/10-keenetic-udp-fix /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
 
 echo "Файл 10-keenetic-udp-fix скопирован"
 
-echo
+echo ""
 
 chmod +x /opt/etc/ndm/netfilter.d/000-zapret.sh
 echo "Права выданы /opt/etc/ndm/netfilter.d/000-zapret.sh"
 
-echo
+echo ""
 
 chmod +x /opt/etc/init.d/S00fix
 echo "Права выданы /opt/etc/init.d/S00fix"
 
-echo
+echo ""
 
 
 echo "Начало обновления конфигурации zapret..."
