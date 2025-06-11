@@ -119,7 +119,7 @@ echo "Резервная копия успешно создана."
 
 # --- Основная логика замены с использованием AWK ---
 
-echo "Обновление блока NFQWS_OPT и параметра WS_USER в '$CONFIG_FILE'..."
+echo "Обновление блока NFQWS_OPT, параметра WS_USER и NFQWS_PORTS_UDP в '$CONFIG_FILE'..."
 # Используем AWK для надежной замены многострочного блока и параметра WS_USER.
 awk -v new_file_path="$NEW_OPT_FILE" '
 BEGIN {
@@ -157,6 +157,12 @@ in_nfqws_opt_block && /^"$/ {
     next;
 }
 
+# Для строки NFQWS_PORTS_UDP=443, заменяем её на NFQWS_PORTS_UDP=443,50000-50099
+/^NFQWS_PORTS_UDP=443$/ {
+    print "NFQWS_PORTS_UDP=443,50000-50099";
+    next;
+}
+
 # Для всех остальных строк: если мы не находимся внутри блока NFQWS_OPT, печатаем строку
 !in_nfqws_opt_block {
     print $0;
@@ -167,10 +173,10 @@ in_nfqws_opt_block && /^"$/ {
 if [ $? -eq 0 ]; then
     # Если AWK выполнился успешно, заменяем оригинальный файл временным
     mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo "Параметры NFQWS_OPT и WS_USER успешно обновлены в '$CONFIG_FILE'."
+    echo "Параметры NFQWS_OPT, WS_USER и NFQWS_PORTS_UDP успешно обновлены в '$CONFIG_FILE'."
     echo "Скрипт выполнен успешно!"
 else
-    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT и WS_USER в '$CONFIG_FILE'."
+    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT, WS_USER и NFQWS_PORTS_UDP в '$CONFIG_FILE'."
     rm -f "${CONFIG_FILE}.tmp" # Удаляем временный файл в случае ошибки
     exit 1
 fi
