@@ -7,13 +7,33 @@ NEW_OPT_FILE="./nfqws_opt.txt"
 # Путь для резервной копии оригинального файла конфигурации
 BACKUP_FILE="${CONFIG_FILE}.bak"
 
-# Проверяем, что передан один аргумент (путь к файлу со списком копирования)
-if [ -z "$1" ]; then
-    echo "Использование: $0 <файл_со_списком_копирования>"
+# Переменные для хранения аргументов
+MAPPING_FILE=""
+NETWORK_INTERFACE="" # Изначально пустая, так как параметр опциональный
+
+# Парсинг аргументов командной строки
+while getopts "p:i:" opt; do
+    case ${opt} in
+        p )
+            MAPPING_FILE=$OPTARG
+            ;;
+        i )
+            NETWORK_INTERFACE=$OPTARG # Устанавливаем только если -i предоставлен
+            ;;
+        \? )
+            echo "Использование: $0 -p <файл_со_списком_копирования> [-i <имя_сетевого_интерфейса>]"
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND -1))
+
+# Проверяем, что ОБЯЗАТЕЛЬНЫЙ аргумент (-p) был передан
+if [ -z "$MAPPING_FILE" ]; then
+    echo "Ошибка: Файл со списком копирования не указан."
+    echo "Использование: $0 -p <файл_со_списком_копирования> [-i <имя_сетевого_интерфейса>]"
     exit 1
 fi
-
-MAPPING_FILE="$1"
 
 # Проверяем, существует ли файл со списком копирования
 if [ ! -f "$MAPPING_FILE" ]; then
@@ -119,9 +139,9 @@ echo "Резервная копия успешно создана."
 
 # --- Основная логика замены с использованием AWK ---
 
-echo "Обновление блока NFQWS_OPT, параметра WS_USER и NFQWS_PORTS_UDP в '$CONFIG_FILE'..."
-# Используем AWK для надежной замены многострочного блока и параметра WS_USER.
-awk -v new_file_path="$NEW_OPT_FILE" '
+echo "Обновление блока NFQWS_OPT, параметров WS_USER, NFQWS_PORTS_UDP, IFACE_WAN (опционально) и IFACE_LAN в '$CONFIG_FILE'..."
+# Используем AWK для надежной замены многострочного блока и параметров.
+awk -v new_file_path="$NEW_OPT_FILE" -v interface="$NETWORK_INTERFACE" '
 BEGIN {
     # Флаг, указывающий, находимся ли мы внутри блока NFQWS_OPT
     in_nfqws_opt_block = 0;
@@ -163,6 +183,22 @@ in_nfqws_opt_block && /^"$/ {
     next;
 }
 
+# Для строки IFACE_WAN=, заменяем её на IFACE_WAN=<NETWORK_INTERFACE> только если интерфейс указан
+/^IFACE_WAN=/ {
+    if (interface != "") { # Проверяем, что переменная interface не пустая
+        print "IFACE_WAN=" interface;
+    } else {
+        print $0; # Если interface пустая, просто печатаем оригинальную строку
+    }
+    next;
+}
+
+# Для строки IFACE_LAN=, заменяем её на IFACE_LAN=br0
+/^IFACE_LAN=/ {
+    print "IFACE_LAN=br0";
+    next;
+}
+
 # Для всех остальных строк: если мы не находимся внутри блока NFQWS_OPT, печатаем строку
 !in_nfqws_opt_block {
     print $0;
@@ -173,10 +209,10 @@ in_nfqws_opt_block && /^"$/ {
 if [ $? -eq 0 ]; then
     # Если AWK выполнился успешно, заменяем оригинальный файл временным
     mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo "Параметры NFQWS_OPT, WS_USER и NFQWS_PORTS_UDP успешно обновлены в '$CONFIG_FILE'."
+    echo "Параметры NFQWS_OPT, WS_USER, NFQWS_PORTS_UDP, IFACE_WAN (если указан) и IFACE_LAN успешно обновлены в '$CONFIG_FILE'."
     echo "Скрипт выполнен успешно!"
 else
-    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT, WS_USER и NFQWS_PORTS_UDP в '$CONFIG_FILE'."
+    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT, WS_USER, NFQWS_PORTS_UDP, IFACE_WAN и IFACE_LAN в '$CONFIG_FILE'."
     rm -f "${CONFIG_FILE}.tmp" # Удаляем временный файл в случае ошибки
     exit 1
 fi
