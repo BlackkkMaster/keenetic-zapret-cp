@@ -36,3 +36,23 @@ cd ~/keenetic-zapret-cp
 Дополнительно в скрипт можно передать аргумент `-i имя_сетевого_интерфейса` чтобы заменить параметр `IFACE_WAN=` в конфиге.
 
 Узнать нужный сетевой интерфейс можно командой `ifconfig`
+
+### 4. Запуск/перезапуск/остановка zapret
+
+**Запуск:**
+
+```bash
+/opt/zapret/init.d/sysv/zapret start
+```
+
+**Перезапуск:**
+
+```bash
+/opt/zapret/init.d/sysv/zapret restart
+```
+
+**Остановка:**
+
+```bash
+/opt/zapret/init.d/sysv/zapret stop
+```
