@@ -209,10 +209,10 @@ in_nfqws_opt_block && /^"$/ {
 if [ $? -eq 0 ]; then
     # Если AWK выполнился успешно, заменяем оригинальный файл временным
     mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo "Параметры NFQWS_OPT, WS_USER, NFQWS_PORTS_UDP, IFACE_WAN (если указан) и IFACE_LAN успешно обновлены в '$CONFIG_FILE'."
+    echo "Параметры успешно обновлены в '$CONFIG_FILE'."
     echo "Скрипт выполнен успешно!"
 else
-    echo "Ошибка: Не удалось обновить параметры NFQWS_OPT, WS_USER, NFQWS_PORTS_UDP, IFACE_WAN и IFACE_LAN в '$CONFIG_FILE'."
+    echo "Ошибка: Не удалось обновить параметры в '$CONFIG_FILE'."
     rm -f "${CONFIG_FILE}.tmp" # Удаляем временный файл в случае ошибки
     exit 1
 fi
