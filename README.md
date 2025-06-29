@@ -30,7 +30,7 @@ cd zapret
 ```bash
 git clone https://github.com/BlackkkMaster/keenetic-zapret-cp ~/keenetic-zapret-cp
 cd ~/keenetic-zapret-cp
-./install.sh -p cfg/paths.txt
+./install.sh -p cfg/paths.txt # -i имя_сетевого_интерфейса
 ```
 
 Дополнительно в скрипт можно передать аргумент `-i имя_сетевого_интерфейса` чтобы заменить параметр `IFACE_WAN=` в конфиге.
