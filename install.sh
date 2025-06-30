@@ -139,7 +139,7 @@ echo "Резервная копия успешно создана."
 
 # --- Основная логика замены с использованием AWK ---
 
-echo "Обновление блока NFQWS_OPT, параметров WS_USER, NFQWS_PORTS_UDP, IFACE_WAN (опционально) и IFACE_LAN в '$CONFIG_FILE'..."
+echo "Обновление параметров в '$CONFIG_FILE'..."
 # Используем AWK для надежной замены многострочного блока и параметров.
 awk -v new_file_path="$NEW_OPT_FILE" -v interface="$NETWORK_INTERFACE" '
 BEGIN {
