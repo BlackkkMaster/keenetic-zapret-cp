@@ -184,7 +184,7 @@ in_nfqws_opt_block && /^"$/ {
 }
 
 # Для строки IFACE_WAN=, заменяем её на IFACE_WAN=<NETWORK_INTERFACE> только если интерфейс указан
-/^IFACE_WAN=/ {
+/^#IFACE_WAN=/ {
     if (interface != "") { # Проверяем, что переменная interface не пустая
         print "IFACE_WAN=" interface;
     } else {
@@ -194,7 +194,7 @@ in_nfqws_opt_block && /^"$/ {
 }
 
 # Для строки IFACE_LAN=, заменяем её на IFACE_LAN=br0
-/^IFACE_LAN=/ {
+/^#IFACE_LAN=/ {
     print "IFACE_LAN=br0";
     next;
 }
