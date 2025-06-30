@@ -9,7 +9,7 @@
 ### 1. Установка компонентов
 
 ```bash
-opkg  update
+opkg update
 opkg install coreutils-sort curl grep gzip ipset iptables kmod_ndms xtables-addons_legacy git git-http
 ```
 
