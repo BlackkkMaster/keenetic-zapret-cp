@@ -2,7 +2,7 @@
 
 [**Оригинальная статья по установке**](https://habr.com/ru/articles/834826/)
 
-## *Актуально для [zapret v71.1.1](https://github.com/bol-van/zapret/releases/tag/v71.1.1)*
+## *Актуально для [zapret v71.2](https://github.com/bol-van/zapret/releases/tag/v71.2)*
 
 ## Использование
 
@@ -17,9 +17,9 @@ opkg install coreutils-sort curl grep gzip ipset iptables kmod_ndms xtables-addo
 
 ```bash
 cd /opt
-curl -L https://github.com/bol-van/zapret/releases/download/v71.1.1/zapret-v71.1.1.tar.gz > zapret.tar.gz
+curl -L https://github.com/bol-van/zapret/releases/download/v71.2/zapret-v71.2.tar.gz > zapret.tar.gz
 tar -xvzf zapret.tar.gz
-mv zapret-v71.1.1 zapret
+mv zapret-v71.2 zapret
 rm zapret.tar.gz
 cd zapret
 ./install_easy.sh
@@ -37,7 +37,7 @@ cd ~/keenetic-zapret-cp
 
 Узнать нужный сетевой интерфейс можно командой `ifconfig`
 
-### 4. Запуск/перезапуск/остановка zapret
+<details><summary><h3>Запуск/перезапуск/остановка zapret</h3></summary>
 
 **Запуск:**
 
@@ -56,3 +56,5 @@ cd ~/keenetic-zapret-cp
 ```bash
 /opt/zapret/init.d/sysv/zapret stop
 ```
+
+</details>
