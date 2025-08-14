@@ -2,7 +2,7 @@
 
 [**Оригинальная статья по установке**](https://habr.com/ru/articles/834826/)
 
-## *Актуально для [zapret v71.2](https://github.com/bol-van/zapret/releases/tag/v71.2)*
+## *Актуально для [zapret v71.3](https://github.com/bol-van/zapret/releases/tag/v71.3)*
 
 ## Использование
 
@@ -17,9 +17,9 @@ opkg install coreutils-sort curl grep gzip ipset iptables kmod_ndms xtables-addo
 
 ```bash
 cd /opt
-curl -L https://github.com/bol-van/zapret/releases/download/v71.2/zapret-v71.2.tar.gz > zapret.tar.gz
+curl -L https://github.com/bol-van/zapret/releases/download/v71.3/zapret-v71.3.tar.gz > zapret.tar.gz
 tar -xvzf zapret.tar.gz
-mv zapret-v71.2 zapret
+mv zapret-v71.3 zapret
 rm zapret.tar.gz
 cd zapret
 ./install_easy.sh

@@ -87,13 +87,19 @@ echo "Копирование файлов завершено."
 echo ""
 
 ln -fs /opt/zapret/init.d/sysv/zapret /opt/etc/init.d/S90-zapret
-
 echo "Добавлено в автозагрузку: /opt/etc/init.d/S90-zapret -> /opt/zapret/init.d/sysv/zapret"
 echo ""
 
 cp -a /opt/zapret/init.d/custom.d.examples.linux/10-keenetic-udp-fix /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
-
 echo "Файл 10-keenetic-udp-fix скопирован"
+echo ""
+
+cp -a /opt/zapret/init.d/custom.d.examples.linux/50-discord-media /opt/zapret/init.d/sysv/custom.d/50-discord-media
+echo "Файл 50-discord-media скопирован"
+echo ""
+
+cp -a /opt/zapret/init.d/custom.d.examples.linux/50-stun4all /opt/zapret/init.d/sysv/custom.d/50-stun4all
+echo "Файл 50-stun4all скопирован"
 echo ""
 
 chmod +x /opt/etc/ndm/netfilter.d/000-zapret.sh
@@ -174,12 +180,6 @@ in_nfqws_opt_block && /^"$/ {
 # Для строки #WS_USER=nobody, заменяем её на WS_USER=nobody
 /^#WS_USER=nobody$/ {
     print "WS_USER=nobody";
-    next;
-}
-
-# Для строки NFQWS_PORTS_UDP=443, заменяем её на NFQWS_PORTS_UDP=443,50000-50099
-/^NFQWS_PORTS_UDP=443$/ {
-    print "NFQWS_PORTS_UDP=443,50000-50099";
     next;
 }
 
