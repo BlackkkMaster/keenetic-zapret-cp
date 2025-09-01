@@ -2,3 +2,6 @@
 ./files/000-zapret.sh = /opt/etc/ndm/netfilter.d/000-zapret.sh
 ./files/S00fix = /opt/etc/init.d/S00fix
 ./files/zapret-hosts-user.txt = /opt/zapret/ipset/zapret-hosts-user.txt
+/opt/zapret/init.d/custom.d.examples.linux/10-keenetic-udp-fix = /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
+/opt/zapret/init.d/custom.d.examples.linux/50-discord-media = /opt/zapret/init.d/sysv/custom.d/50-discord-media
+/opt/zapret/init.d/custom.d.examples.linux/50-stun4all = /opt/zapret/init.d/sysv/custom.d/50-stun4all

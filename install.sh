@@ -90,19 +90,16 @@ ln -fs /opt/zapret/init.d/sysv/zapret /opt/etc/init.d/S90-zapret
 echo "Добавлено в автозагрузку: /opt/etc/init.d/S90-zapret -> /opt/zapret/init.d/sysv/zapret"
 echo ""
 
-cp -a /opt/zapret/init.d/custom.d.examples.linux/10-keenetic-udp-fix /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
 chmod +x /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix
-echo "Файл 10-keenetic-udp-fix скопирован, права выданы"
+echo "Права выданы /opt/zapret/init.d/sysv/custom.d/10-keenetic-udp-fix"
 echo ""
 
-curl -L https://raw.githubusercontent.com/bol-van/zapret/refs/heads/master/init.d/custom.d.examples.linux/50-discord-media > /opt/zapret/init.d/sysv/custom.d/50-discord-media
 chmod +x /opt/zapret/init.d/sysv/custom.d/50-discord-media
-echo "Файл 50-discord-media скопирован, права выданы"
+echo "Права выданы /opt/zapret/init.d/sysv/custom.d/50-discord-media"
 echo ""
 
-curl -L https://raw.githubusercontent.com/bol-van/zapret/refs/heads/master/init.d/custom.d.examples.linux/50-stun4all > /opt/zapret/init.d/sysv/custom.d/50-stun4all
 chmod +x /opt/zapret/init.d/sysv/custom.d/50-stun4all
-echo "Файл 50-stun4all скопирован, права выданы"
+echo "Права выданы /opt/zapret/init.d/sysv/custom.d/50-stun4all"
 echo ""
 
 chmod +x /opt/etc/ndm/netfilter.d/000-zapret.sh
